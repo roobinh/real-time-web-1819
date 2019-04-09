@@ -1,6 +1,7 @@
 
 var express = require('express');
 var path = require('path');
+var fs = require('fs')
 
 var app = express();
 var socket = require('socket.io')
@@ -29,8 +30,14 @@ app.use('/path', pathRouter);
 io.on('connection', function(socket) {
     console.log("made socket connection with client...", socket.id)
 
+    //Send Chat to client
+    fs.readFile('./chats/chat1.json', (err, buffer) => {
+        const json = JSON.parse(buffer.toString());
+        socket.emit('chat', json)
+    })
+
     //Welcome message when connecting
-    socket.emit('welcome', {welcome: 'to my socket'});
+    socket.emit('welcome', {welcome: socket.id});
 
     //Message when someone disconnects
     socket.on('disconnect', function() {
@@ -38,12 +45,71 @@ io.on('connection', function(socket) {
             handle: socket.id,
             message: "disconnected"
         }
-        
+
         io.sockets.emit('chat', data)
     })
 
     //when chat is recieved, send message to all sockets
     socket.on('chat', function(data){
-        io.sockets.emit('chat', data);
+        fs.readFile('./chats/chat1.json', (err, buffer) => {
+            const json = JSON.parse(buffer.toString());
+
+            if (err) throw err;
+
+            if(data.message == "" || data.handle == "") {
+                //no data to be added
+            } else {
+                //add new message to json
+                const user = data.handle;
+                const message = data.message;
+
+                const jsonLength = Object.keys(json).length + 1;
+                json[jsonLength] = user + ": " + message;
+
+                fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
+                    if (err) throw err;
+                    console.log("file has been saved!");
+                })
+                io.sockets.emit('chat', json);
+            }
+        })
+    })
+
+    socket.on('clear', () => {  
+        console.log("Clearing Chat...")
+        clearFile = {
+            1: "SERVER: <i>Messages cleared</i>"
+        }
+        
+        console.log("Writefile")
+        fs.writeFile('./chats/chat1.json', JSON.stringify(clearFile), (err) => {
+            if(err) throw err;
+        })
+       
+        console.log('Readfile')
+        fs.readFile('./chats/chat1.json', (err, buffer) => {
+            const json = JSON.parse(buffer.toString());
+            io.sockets.emit('chat', json);
+        })
+        console.log("Chat cleared!")
     })
 })
+
+// function messageToJSON(data) {
+//     fs.readFile('./chats/chat1.json', (err, buffer) => {
+//         if (err) throw err;
+
+//         const json = JSON.parse(buffer.toString());
+//         const user = data.handle;
+//         const message = data.message;
+
+//         const jsonLength = Object.keys(json).length + 1;
+//         json[jsonLength] = user + ": " + message;
+
+//         fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
+//             if (err) throw err;
+//             console.log("file has been saved!");
+//         })
+    // })
+    
+// }

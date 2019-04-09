@@ -2,25 +2,34 @@
     console.log("script.js imported.")
 
     // Socket.io
-    console.log('Making connection...')
+    console.log('making connection to host...')
     var socket = io();
-    console.log('Connected.')
+    console.log('connected to host.')
 
     // Variables
     var form = document.getElementById("form");
     var output = document.getElementById('output');
     var handle = document.getElementById('handle');
     var message = document.getElementById('message');
+    var clear = document.getElementById('clearmessages')
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         sendMessage(message.value, handle.value);
     })
 
+    clear.addEventListener("click", () => {
+        console.log("clearing messages")
+        socket.emit('clear', 'ay')
+    })
+
     socket.on('chat', function(data) {
-        console.log("message recieved.");
-        console.log(data)
-        output.innerHTML += "<br>" + data.handle + ": " + data.message;
+        output.innerHTML = "";
+
+        for(var i = 1; i <= Object.keys(data).length; i++) {
+            var value = data[i];
+            output.innerHTML += value + "<br>";
+        }
     })
 
     socket.on('welcome', function(data) {
