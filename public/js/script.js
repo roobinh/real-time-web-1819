@@ -2,7 +2,7 @@ console.log("script.js imported.")
 
 // Socket.io
 console.log('Making connection...')
-var socket = io.connect('http://localhost:2100');
+var socket = io();
 console.log('Connected.')
 
 // Variables
