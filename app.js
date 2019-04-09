@@ -45,6 +45,7 @@ io.on('connection', function(socket) {
 
     // when chat is recieved, send message to all sockets
     socket.on('chat', function(data){
+        checkForStyling(data.handle, data.message)
         addMessage(data.handle, data.message);
     })
     
@@ -78,7 +79,7 @@ io.on('connection', function(socket) {
             } else {
                 //add new message to json
                 const jsonLength = Object.keys(json).length + 1;
-                json[jsonLength] = timestamp + " " + user + ": " + message;
+                json[jsonLength] = timestamp + " <b>" + user + "</b>: " + message;
 
                 fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
                     if (err) throw err;
@@ -103,6 +104,14 @@ io.on('connection', function(socket) {
             const json = JSON.parse(buffer.toString());
             io.sockets.emit('chat', json)
         })
+    }
+
+    function checkForStyling(user, message) {
+        //check if message starts with:  'style:' 
+        if(message.includes(":")) {
+            console.log("dubbele punt gevonden!");
+            io.sockets.emit('style', message);
+        }
     }
 
 })

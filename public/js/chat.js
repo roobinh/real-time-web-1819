@@ -64,6 +64,12 @@
             sendMessage("has joined the server!", username)
         }
     })
+
+    socket.on('style', function(data) {
+        console.log("Changing styling: " + data);
+        var body = document.getElementsByTagName("BODY")[0];
+        body.setAttribute('style', data)
+    })
     
     // send message made easy
     function sendMessage(message) {
