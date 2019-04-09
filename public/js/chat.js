@@ -36,7 +36,7 @@
         console.log("clearing messages")
         socket.emit('clear', '')
     })
-    
+
     // change username
     changeusername.addEventListener("click", () => {
         console.log("change username")
@@ -57,7 +57,9 @@
     // when user joins server
     socket.on('welcome', function(data) {
         console.log(data)
-        sendMessage("has joined the server!", username)
+        if(username !== null) {
+            sendMessage("has joined the server!", username)
+        }
     })
     
     // send message made easy

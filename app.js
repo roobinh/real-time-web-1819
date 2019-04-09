@@ -70,13 +70,15 @@ io.on('connection', function(socket) {
             if (err) throw err;
 
             const json = JSON.parse(buffer.toString());
+            const date = new Date();
+            const timestamp = "[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "]" 
 
             if(user == "" || message == "") {
                 console.log("username or message undefined")
             } else {
                 //add new message to json
                 const jsonLength = Object.keys(json).length + 1;
-                json[jsonLength] = user + ": " + message;
+                json[jsonLength] = timestamp + " " + user + ": " + message;
 
                 fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
                     if (err) throw err;
