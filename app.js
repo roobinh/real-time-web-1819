@@ -29,6 +29,7 @@ app.use('/path', pathRouter);
 io.on('connection', function(socket) {
     console.log("made socket connection with client...", socket.id)
 
+    //Welcome message when connecting
     socket.emit('welcome', {welcome: 'to my socket'});
 
     //when chat is recieved, send message to all sockets
