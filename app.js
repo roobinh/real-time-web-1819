@@ -37,7 +37,7 @@ io.on('connection', function(socket) {
     })
 
     //Welcome message when connecting
-    socket.emit('welcome', {welcome: socket.id});
+    socket.emit('welcome', {id: socket.id});
 
     //Message when someone disconnects
     socket.on('disconnect', function() {

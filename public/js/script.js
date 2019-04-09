@@ -20,7 +20,7 @@
 
     clear.addEventListener("click", () => {
         console.log("clearing messages")
-        socket.emit('clear', 'ay')
+        socket.emit('clear', '')
     })
 
     socket.on('chat', function(data) {
@@ -33,7 +33,8 @@
     })
 
     socket.on('welcome', function(data) {
-        console.log(data);
+        console.log(data)
+        sendMessage("has joined the server!", data.id)
     })
 
     function sendMessage(message, handle) {
