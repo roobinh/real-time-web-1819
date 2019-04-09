@@ -1,0 +1,11 @@
+{
+  "name": "web-design-larissa",
+  "short_name": "web-design",
+  "theme_color": "#009b9f",
+  "background_color": "#e4e4e4",
+  "display": "browser",
+  "Scope": "/",
+  "start_url": "/",
+  "icons": null,
+  "splash_pages": null
+}
