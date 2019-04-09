@@ -2,24 +2,25 @@
     console.log("client.js imported.")
 
     window.onload = () => {
-        // check if username exists
+        // check if username exists, else redirect to home
         if(myStorage.getItem('username') == null) {
             window.location.href = "/";
         }
     }
 
-    // Socket.io
+    // socket.io
     console.log('making connection to host...')
     var socket = io();
     console.log('connected to host.')
 
-    // Variables
+    // variables
     var form = document.getElementById("form");
     var output = document.getElementById('output');
     var message = document.getElementById('message');
     var clear = document.getElementById('clearmessages');
     var changeusername = document.getElementById('changeusername');
 
+    // localstorage
     var myStorage = window.localStorage;
     var username = myStorage.getItem('username')
 
@@ -35,7 +36,8 @@
         console.log("clearing messages")
         socket.emit('clear', '')
     })
-
+    
+    // change username
     changeusername.addEventListener("click", () => {
         console.log("change username")
         myStorage.removeItem('username')

@@ -32,86 +32,75 @@ app.use('/chat', chatRouter)
 io.on('connection', function(socket) {
     console.log("made socket connection with client...", socket.id)
 
-    //Send Chat to client
-    fs.readFile('./chats/chat1.json', (err, buffer) => {
-        const json = JSON.parse(buffer.toString());
-        socket.emit('chat', json)
-    })
+    // refresh chat on load
+    refreshClientChat();
 
-    //Welcome message when connecting
+    // welcome message when connecting
     socket.emit('welcome', {id: socket.id});
 
-    //Message when someone disconnects
+    // message when someone disconnects
     socket.on('disconnect', function() {
-        var data = {
-            handle: socket.id,
-            message: "disconnected"
-        }
-
-        io.sockets.emit('chat', data)
+        addMessage(socket.id, "has disconnected")
     })
 
-    //when chat is recieved, send message to all sockets
+    // when chat is recieved, send message to all sockets
     socket.on('chat', function(data){
-        fs.readFile('./chats/chat1.json', (err, buffer) => {
-            const json = JSON.parse(buffer.toString());
+        addMessage(data.handle, data.message);
+    })
+    
+    // clear chat
+    socket.on('clear', () => {  
 
+        clearFile = {
+            1: "SERVER: <i>Messages cleared</i>"
+        }
+        
+        console.log("Clearing Chat...")
+        fs.writeFile('./chats/chat1.json', JSON.stringify(clearFile), (err) => {
+            if(err) throw err;
+        })
+        console.log("Chat Cleared")
+
+        refreshClientsChat();
+    })
+
+    // add message to json
+    function addMessage(user, message) {
+        fs.readFile('./chats/chat1.json', (err, buffer) => {
             if (err) throw err;
 
-            if(data.message == "" || data.handle == "") {
-                //no data to be added
+            const json = JSON.parse(buffer.toString());
+
+            if(user == "" || message == "") {
+                console.log("username or message undefined")
             } else {
                 //add new message to json
-                const user = data.handle;
-                const message = data.message;
-
                 const jsonLength = Object.keys(json).length + 1;
                 json[jsonLength] = user + ": " + message;
 
                 fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
                     if (err) throw err;
-                    console.log("file has been saved!");
+                    console.log("Message has been added to JSON file!");
                 })
                 io.sockets.emit('chat', json);
             }
         })
-    })
+    }
 
-    socket.on('clear', () => {  
-        console.log("Clearing Chat...")
-        clearFile = {
-            1: "SERVER: <i>Messages cleared</i>"
-        }
-        
-        console.log("Writefile")
-        fs.writeFile('./chats/chat1.json', JSON.stringify(clearFile), (err) => {
-            if(err) throw err;
-        })
-       
-        console.log('Readfile')
+    function refreshClientChat() {
+        // send chat to client
         fs.readFile('./chats/chat1.json', (err, buffer) => {
             const json = JSON.parse(buffer.toString());
-            io.sockets.emit('chat', json);
+            socket.emit('chat', json)
         })
-        console.log("Chat cleared!")
-    })
+    }
+
+    function refreshClientsChat() {
+        //send chat to clients
+        fs.readFile('./chats/chat1.json', (err, buffer) => {
+            const json = JSON.parse(buffer.toString());
+            io.sockets.emit('chat', json)
+        })
+    }
+
 })
-
-// function messageToJSON(data) {
-//     fs.readFile('./chats/chat1.json', (err, buffer) => {
-//         if (err) throw err;
-
-//         const json = JSON.parse(buffer.toString());
-//         const user = data.handle;
-//         const message = data.message;
-
-//         const jsonLength = Object.keys(json).length + 1;
-//         json[jsonLength] = user + ": " + message;
-
-//         fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
-//             if (err) throw err;
-//             console.log("file has been saved!");
-//         })
-    // })
-    
-// }
