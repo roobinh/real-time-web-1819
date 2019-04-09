@@ -32,6 +32,16 @@ io.on('connection', function(socket) {
     //Welcome message when connecting
     socket.emit('welcome', {welcome: 'to my socket'});
 
+    //Message when someone disconnects
+    socket.on('disconnect', function() {
+        var data = {
+            handle: socket.id,
+            message: "disconnected"
+        }
+        
+        io.sockets.emit('chat', data)
+    })
+
     //when chat is recieved, send message to all sockets
     socket.on('chat', function(data){
         io.sockets.emit('chat', data);
