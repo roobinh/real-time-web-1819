@@ -10,29 +10,16 @@
 </header>
 
 <main>
+    <form id="form"> 
+        <input id="username" type="text" placeholder="Naam" required>
 
-    <div id="chat">
-
-        <div id="chat-window">
-            <div id="output">
-
-            </div>
-        </div>
-        <form id="form"> 
-            <input id="handle" type="text" placeholder="handle">
-            <input id="message" type="text" placeholder="message">
-    
-            <input type="submit" placeholder="Send">
-        </form>
-
-        <button id="clearmessages">Clear</button>
-        
-    </div>
-    
+        <input type="submit" placeholder="Send">
+    </form>
 </main>
 
 <footer>
     <% include ../partials/footer %>
+    <script src="js/client.js"></script>
 </footer>
 
 </body>

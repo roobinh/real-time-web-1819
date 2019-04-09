@@ -22,9 +22,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routers
 var indexRouter = require('./routes/index');
 var pathRouter = require('./routes/path');
+var chatRouter = require('./routes/chat')
 
 app.use('/', indexRouter);
 app.use('/path', pathRouter);
+app.use('/chat', chatRouter)
 
 // Socket.io
 io.on('connection', function(socket) {
