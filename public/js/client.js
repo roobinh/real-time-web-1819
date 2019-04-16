@@ -1,5 +1,4 @@
 (() => {
-
     window.onload = () => {
         myStorage = window.localStorage;
         if(myStorage.getItem('username') !== null) {
@@ -23,5 +22,4 @@
     function setUsername() {
         myStorage.setItem('username', username.value)
     }
-
 })();

@@ -1,15 +1,15 @@
 
+// requires
 var express = require('express');
 var path = require('path');
-var fs = require('fs')
+var Discord = require('discord.js')
 
 var app = express();
 var socket = require('socket.io')
 
+// server setup
 var port = process.env.PORT || 2100
 var server = app.listen(port, () => console.log(`App running, listening on port ${port}!`))
-
-var io = socket(server);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,99 +19,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routers
-var indexRouter = require('./routes/index');
-var pathRouter = require('./routes/path');
-var chatRouter = require('./routes/chat')
+// routers
+var Router = require('./routes/index');
+app.use('/', Router);
 
-app.use('/', indexRouter);
-app.use('/path', pathRouter);
-app.use('/chat', chatRouter)
+// discord
+const token = 'NTY3NjQyNjM0NTQ2NDQ2MzU2.XLWl7g.LES8YuJd7W61Nlj5H5ZiwPQHMtI'
+const client_id = '567642634546446356';
 
-// Socket.io
-io.on('connection', function(socket) {
-    console.log("made socket connection with client...", socket.id)
+const client = new Discord.Client();
 
-    // refresh chat on load
-    refreshClientChat();
-
-    // welcome message when connecting
-    socket.emit('welcome', {id: socket.id});
-
-    // message when someone disconnects
-    socket.on('disconnect', function() {
-        addMessage(socket.id, "has disconnected")
-    })
-
-    // when chat is recieved, send message to all sockets
-    socket.on('chat', function(data){
-        checkForStyling(data.handle, data.message)
-        addMessage(data.handle, data.message);
-    })
-    
-    // clear chat
-    socket.on('clear', () => {  
-
-        clearFile = {
-            1: "SERVER: <i>Messages cleared</i>"
-        }
-        
-        console.log("Clearing Chat...")
-        fs.writeFile('./chats/chat1.json', JSON.stringify(clearFile), (err) => {
-            if(err) throw err;
-        })
-        console.log("Chat Cleared")
-
-        refreshClientsChat();
-    })
-
-    // add message to json
-    function addMessage(user, message) {
-        fs.readFile('./chats/chat1.json', (err, buffer) => {
-            if (err) throw err;
-
-            const json = JSON.parse(buffer.toString());
-            const date = new Date();
-            const timestamp = "[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "]" 
-
-            if(user == "" || message == "") {
-                console.log("username or message undefined")
-            } else {
-                //add new message to json
-                const jsonLength = Object.keys(json).length + 1;
-                json[jsonLength] = timestamp + " <b>" + user + "</b>: " + message;
-
-                fs.writeFile('./chats/chat1.json', JSON.stringify(json), (err) => {
-                    if (err) throw err;
-                    console.log("Message has been added to JSON file!");
-                })
-                io.sockets.emit('chat', json);
-            }
-        })
-    }
-
-    function refreshClientChat() {
-        // send chat to client
-        fs.readFile('./chats/chat1.json', (err, buffer) => {
-            const json = JSON.parse(buffer.toString());
-            socket.emit('chat', json)
-        })
-    }
-
-    function refreshClientsChat() {
-        //send chat to clients
-        fs.readFile('./chats/chat1.json', (err, buffer) => {
-            const json = JSON.parse(buffer.toString());
-            io.sockets.emit('chat', json)
-        })
-    }
-
-    function checkForStyling(user, message) {
-        //check if message starts with:  'style:' 
-        if(message.includes(":")) {
-            console.log("dubbele punt gevonden!");
-            io.sockets.emit('style', message);
-        }
-    }
-
+client.on('ready', () => {
+    console.log("Bot is connected.")
 })
+
+client.login(token);

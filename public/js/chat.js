@@ -25,7 +25,7 @@
     var username = myStorage.getItem('username')
 
     // disable autocomplete
-    form.setAttribute( "autocomplete", "off" ); 
+    form.setAttribute("autocomplete", "off"); 
 
     // send message
     form.addEventListener("submit", (e) => {
