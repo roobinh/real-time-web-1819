@@ -24,14 +24,15 @@ app.use('/', Router);
 // discord
 const token = 'NTY3NjQyNjM0NTQ2NDQ2MzU2.XLWl7g.LES8YuJd7W61Nlj5H5ZiwPQHMtI'
 const client_id = '567642634546446356';
-const allCommands = ["poro", "help", "lvl"]
-const client = new Discord.Client();
 
 // riot games
 const riot_api_token = 'RGAPI-ab0206c4-ecb6-42ff-85c5-5e32c04efdef';
 
+// client
+const client = new Discord.Client();
+
 client.on('message', (msg) => {
-     message.recieved(msg);
+    message.recieved(msg);
 })
 
 client.on('ready', () => {
@@ -40,6 +41,7 @@ client.on('ready', () => {
 
 client.login(token);
 
+// objects
 const messages = {
     recieved: function(msg) {
         if(msg.member.user.username !== "discord-bot") {
@@ -53,20 +55,20 @@ const messages = {
 }
 
 const commands = {
-    help: function(command, msg) {
-
+    help: function(msg) {
+        // code here
     },
 
-    poro: function(command, msg) {
-
+    poro: function(msg) {
+        // code here
     },
 
-    lvl: function(command, msg) {
+    lvl: function(msg) {
         var msgToArray = msg.content.split(' '); // ['!lvl', 'king', 'of', 'the', 'club']
         var summonerName = msg.content.slice(5); // king of the club
 
         if(msgToArray.length == 1) { // hele bericht: '!lvl'
-            message.send(msg, 'No name defined: !poro {name here}')
+            message.send(msg, 'Like this --> !poro {name here}')
         } else {
             if(msgToArray.length == 2) {
                 var name = summonerName; // name to look up
@@ -94,24 +96,23 @@ const commands = {
 function checkIfCommand(msg) { 
     if(msg.content.slice(0,1) == "!") { // begint met uitroepteken
         var com = msg.content.split(' ')[0].slice(1) //"!help me" -> "help"
-        if(allCommands.includes(com)) { //check if command is a known command
 
-            switch(com) {
-                case "help":
-                    break;
-                case "poro":
-                    //code
-                    break;
-                case "lvl":
-                    command.lvl(command, msg)
-                    break;
-            }
-
-        } else {
-            message.send(msg, 'Command not found.')
+        switch(com) {
+            case "help":
+                command.help(msg)
+                break;
+            case "poro":
+                command.poro(msg)
+                break;
+            case "lvl":
+                command.lvl(msg)
+                break;
+            default:
+                message.send(msg, 'Command not found.')
         }
+
     } else {
-        console.log("not a command.")
+        console.log("message not starting with: '!'")
     }   
 }
 
