@@ -26,7 +26,7 @@ const token = 'NTY3NjQyNjM0NTQ2NDQ2MzU2.XLWl7g.LES8YuJd7W61Nlj5H5ZiwPQHMtI'
 const client_id = '567642634546446356';
 
 // riot games
-const riot_api_token = 'RGAPI-ab0206c4-ecb6-42ff-85c5-5e32c04efdef';
+const riot_api_token = 'RGAPI-19ac53d8-1467-453b-97b3-5068001ee1f2';
 
 // client
 const client = new Discord.Client();
@@ -48,15 +48,32 @@ const messages = {
             checkIfCommand(msg)
         }
     },
-
     send: function(msg, message) {
-        msg.channel.send(message)
+        newMessage = "```" + message + "```"
+        msg.channel.send(newMessage)
+    },
+
+    error: function(msg, message) {
+        newMessage = "```fix " + message + "```";
+        msg.channel.send(newMessage);
     }
 }
 
 const commands = {
+    joke: function(msg) {
+        var url = "http://api.icndb.com/jokes/random"
+        var fetch = new FetchStream(url);
+        fetch.on('data', function(chunk) {
+            const json = JSON.parse(chunk.toString());
+            if(json.value.joke !== "") {
+                message.send(msg, json.value.joke)
+            }
+        })
+    },
+
     help: function(msg) {
-        // code here
+        var newMessage = "I am here to help, " + msg.member.user.username + ".  Try one of the following commands: !lvl, !joke";
+        message.send(msg, newMessage);
     },
 
     poro: function(msg) {
@@ -68,7 +85,7 @@ const commands = {
         var summonerName = msg.content.slice(5); // king of the club
 
         if(msgToArray.length == 1) { // hele bericht: '!lvl'
-            message.send(msg, 'Like this --> !poro {name here}')
+            message.error(msg, 'Like this --> !poro {name here}')
         } else {
             if(msgToArray.length == 2) {
                 var name = summonerName; // name to look up
@@ -89,6 +106,22 @@ const commands = {
                 } 
             })
         }
+    },
+    user: function(msg) {
+        var username = "tehrubin"
+        var lvl = "59"
+        var rank = "Platinum II"
+        var winrate = "59"
+        var main = "Katarina"
+        var mainrole = "mid"
+
+        var newMessage = 
+        '------------------------------------------------' + 
+        '| ' + username + '| ' + rank + '| Main: ' +main +'|' +
+        '| lvl ' + lvl   + '|  Winrate: ' + winrate + '% | Main-Role: ' + mainrole + '|' +
+        '-----------------------------------------------'
+
+        message.send(msg, newMessage);
     }
 }
 
@@ -106,6 +139,12 @@ function checkIfCommand(msg) {
                 break;
             case "lvl":
                 command.lvl(msg)
+                break;
+            case "joke":
+                command.joke(msg)
+                break;
+            case "user":
+                command.user(msg);
                 break;
             default:
                 message.send(msg, 'Command not found.')
