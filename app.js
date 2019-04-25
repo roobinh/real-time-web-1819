@@ -4,6 +4,7 @@ var express = require('express');
 var path = require('path');
 var Discord = require('discord.js')
 var FetchStream = require('fetch').FetchStream
+var OAuth = require('oauth');
 
 // server setup
 var app = express();
@@ -71,6 +72,61 @@ const commands = {
         })
     },
 
+    weather: function(msg) {
+        var msgToArray = msg.content.split(' ');
+
+        if(msgToArray.length == 1) {
+            var stad = "Amsterdam"
+        } else {
+            var stad = msg.content.slice(9)
+            console.log("Zoeken voor stad:" + stad)
+        }
+
+        var header = {
+            "X-Yahoo-App-Id": "8B56mn42"
+        };
+    
+        var request = new OAuth.OAuth(
+            null,
+            null,
+            'dj0yJmk9Q2ZxTHh1WXVNbGtCJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTUz',
+            '98c6dd79297ccb87213d84bcdcc9ac89d5f27317',
+            '1.0',
+            null,
+            'HMAC-SHA1',
+            null,
+            header
+        );
+        
+        var city = stad.split(' ').join('%20')
+        console.log('City = ' + city)
+
+        request.get(
+            'https://weather-ydn-yql.media.yahoo.com/forecastrss?location=' + city + ',nl&format=json&u=c',
+            null,
+            null,
+            function (err, data, result) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    var weatherData = JSON.parse(data)
+
+                    if(weatherData['forecasts'].length > 0) {
+                        var location = weatherData.location.city;
+                        var temperature = weatherData.current_observation.condition.temperature;
+                        
+                        var mess = "Current temperature in " + location + " is " + temperature + " degrees celcius.";
+    
+                        message.send(msg, mess); 
+
+                    } else {
+                        message.send(msg, "Unknown city, please try another city")
+                    }
+                }
+            }
+        );        
+    },
+
     help: function(msg) {
         var newMessage = "I am here to help, " + msg.member.user.username + ".  Try one of the following commands: !lvl, !joke";
         message.send(msg, newMessage);
@@ -108,6 +164,7 @@ const commands = {
         }
     },
     user: function(msg) {
+
         var username = "tehrubin"
         var lvl = "59"
         var rank = "Platinum II"
@@ -122,6 +179,7 @@ const commands = {
         '-----------------------------------------------'
 
         message.send(msg, newMessage);
+
     }
 }
 
@@ -146,10 +204,12 @@ function checkIfCommand(msg) {
             case "user":
                 command.user(msg);
                 break;
+            case "weather":
+                command.weather(msg);
+                break;
             default:
                 message.send(msg, 'Command not found.')
         }
-
     } else {
         console.log("message not starting with: '!'")
     }   
