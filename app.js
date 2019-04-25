@@ -5,6 +5,12 @@ var path = require('path');
 var Discord = require('discord.js')
 var FetchStream = require('fetch').FetchStream
 var OAuth = require('oauth');
+var dotenv = require('dotenv');
+
+// Setting up .env config
+dotenv.config({
+    path: './.env'
+})
 
 // server setup
 var app = express();
@@ -23,11 +29,12 @@ var Router = require('./routes/index');
 app.use('/', Router);
 
 // discord
-const token = 'NTY3NjQyNjM0NTQ2NDQ2MzU2.XLWl7g.LES8YuJd7W61Nlj5H5ZiwPQHMtI'
-const client_id = '567642634546446356';
+const discord_token = process.env.DISCORD_API_TOKEN;
 
 // riot games
-const riot_api_token = 'RGAPI-19ac53d8-1467-453b-97b3-5068001ee1f2';
+const riot_api_token = process.env.RIOT_API_TOKEN;
+
+console.log('riot token = ' + process.env.RIOT_API_TOKEN);
 
 // client
 const client = new Discord.Client();
@@ -40,7 +47,8 @@ client.on('ready', () => {
     console.log("Bot is connected.")
 })
 
-client.login(token);
+client.login(discord_token);
+
 
 // objects
 const messages = {
@@ -79,7 +87,6 @@ const commands = {
             var stad = "Amsterdam"
         } else {
             var stad = msg.content.slice(9)
-            console.log("Zoeken voor stad:" + stad)
         }
 
         var header = {
@@ -99,7 +106,6 @@ const commands = {
         );
         
         var city = stad.split(' ').join('%20')
-        console.log('City = ' + city)
 
         request.get(
             'https://weather-ydn-yql.media.yahoo.com/forecastrss?location=' + city + ',nl&format=json&u=c',
@@ -130,10 +136,6 @@ const commands = {
     help: function(msg) {
         var newMessage = "I am here to help, " + msg.member.user.username + ".  Try one of the following commands: !lvl, !joke";
         message.send(msg, newMessage);
-    },
-
-    poro: function(msg) {
-        // code here
     },
 
     lvl: function(msg) {
@@ -191,9 +193,6 @@ function checkIfCommand(msg) {
         switch(com) {
             case "help":
                 command.help(msg)
-                break;
-            case "poro":
-                command.poro(msg)
                 break;
             case "lvl":
                 command.lvl(msg)
