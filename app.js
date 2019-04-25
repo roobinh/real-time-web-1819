@@ -63,7 +63,7 @@ const messages = {
     },
 
     error: function(msg, message) {
-        newMessage = "```fix " + message + "```";
+        newMessage = "```" + message + "```";
         msg.channel.send(newMessage);
     }
 }
@@ -134,7 +134,7 @@ const commands = {
     },
 
     help: function(msg) {
-        var newMessage = "I am here to help, " + msg.member.user.username + ".  Try one of the following commands: !lvl, !joke";
+        var newMessage = "I am here to help, " + msg.member.user.username + ".  Try one of the following commands: !lvl, !joke, !weather";
         message.send(msg, newMessage);
     },
 
@@ -143,7 +143,7 @@ const commands = {
         var summonerName = msg.content.slice(5); // king of the club
 
         if(msgToArray.length == 1) { // hele bericht: '!lvl'
-            message.error(msg, 'Like this --> !poro {name here}')
+            message.error(msg, 'Like this --> !lvl {name here}')
         } else {
             if(msgToArray.length == 2) {
                 var name = summonerName; // name to look up
