@@ -80,6 +80,7 @@ Limits:
 - 100 requests every minute
 
 ## Hoofdstuk 4 | Data Lifecycle
+Hieronder de data life cycle van een '!weather' request!
 
 <img src="https://i.ibb.co/zQS1g81/image.png">
 
@@ -104,7 +105,7 @@ Limits:
 <details>
 <summary>Data ontvangen van Yahoo API</summary>
 <br>
-```json
+
 {
     location:{
        woeid:727232,
@@ -221,7 +222,7 @@ Limits:
        }
     ]
  }
-```
+
 </details>
 
 <details>
