@@ -81,3 +81,161 @@ Limits:
 
 ## Hoofdstuk 4 | Data Lifecycle
 
+<img src="https://i.ibb.co/zQS1g81/image.png">
+
+<details>
+<summary>Recieve Message</summary>
+<br>
+<img src="https://i.ibb.co/fDXJM1t/image.png">
+</details>
+
+<details>
+<summary>Check if message is command (really easy to expand)</summary>
+<br>
+<img src="https://i.ibb.co/M7mmxZ9/image.png">
+</details>
+
+<details>
+<summary>Get Request (YAHOO)</summary>
+<br>
+<img src="https://i.ibb.co/mBkPtmc/image.png">
+</details>
+
+<details>
+<summary>Data ontvangen van Yahoo API</summary>
+<br>
+```json
+{
+    location:{
+       woeid:727232,
+       city:'Amsterdam',
+       region:' NH',
+       country:'Netherlands',
+       lat:52.373119,
+       long:4.89319,
+       timezone_id:'Europe/Amsterdam'
+    },
+    current_observation:{
+       wind:{
+          chill:10,
+          direction:115,
+          speed:21
+       },
+       atmosphere:{
+          humidity:66,
+          visibility:16.1,
+          pressure:1026,
+          rising:0
+       },
+       astronomy:{
+          sunrise:'6:42 am',
+          sunset:'8:40 pm'
+       },
+       condition:{
+          text:'Cloudy',
+          code:26,
+          temperature:12
+       },
+       pubDate:1555322400
+    },
+    forecasts:[
+       {
+          day:'Mon',
+          date:1555279200,
+          low:3,
+          high:15,
+          text:'Partly Cloudy',
+          code:30
+       },
+       {
+          day:'Tue',
+          date:1555365600,
+          low:5,
+          high:16,
+          text:'Partly Cloudy',
+          code:30
+       },
+       {
+          day:'Wed',
+          date:1555452000,
+          low:7,
+          high:15,
+          text:'Mostly Cloudy',
+          code:28
+       },
+       {
+          day:'Thu',
+          date:1555538400,
+          low:8,
+          high:20,
+          text:'Mostly Sunny',
+          code:34
+       },
+       {
+          day:'Fri',
+          date:1555624800,
+          low:9,
+          high:21,
+          text:'Sunny',
+          code:32
+       },
+       {
+          day:'Sat',
+          date:1555711200,
+          low:9,
+          high:20,
+          text:'Mostly Sunny',
+          code:34
+       },
+       {
+          day:'Sun',
+          date:1555797600,
+          low:9,
+          high:19,
+          text:'Mostly Sunny',
+          code:34
+       },
+       {
+          day:'Mon',
+          date:1555884000,
+          low:10,
+          high:18,
+          text:'Breezy',
+          code:23
+       },
+       {
+          day:'Tue',
+          date:1555970400,
+          low:10,
+          high:16,
+          text:'Scattered Showers',
+          code:39
+       },
+       {
+          day:'Wed',
+          date:1556056800,
+          low:9,
+          high:16,
+          text:'Showers',
+          code:11
+       }
+    ]
+ }
+```
+</details>
+
+<details>
+<summary>Datamanipulatie</summary>
+<br>
+<img src="https://i.ibb.co/rM6Rg1K/image.png">
+</details>
+
+<details>
+<summary>Send Message</summary>
+<br>
+<img src="https://i.ibb.co/fDXJM1t/image.png">
+</details>
+
+
+
+
