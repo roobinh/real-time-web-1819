@@ -72,7 +72,7 @@ Limits:
 [2. JOKE API](http://www.icndb.com/api/)
 
 Limits:
-- Omdat er bij deze API geen gebruik wordt gemaakt van een API-key oid zijn er ook geen rate limits.
+- Omdat er bij deze API geen gebruik wordt gemaakt van een API-key zijn er ook geen rate limits.
 
 [3. YAHOO API](https://developer.yahoo.com/weather/)
 
